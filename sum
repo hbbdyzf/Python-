@@ -1,0 +1,29 @@
+a=1
+sum=0
+while a!=100:
+    sum=sum+a
+    a+=1
+print(sum)  #sum=4950
+
+
+a=1
+sum=0
+while a!=100:
+    sum=sum+a  #循环求和加数相加
+    a+=1    
+print(sum)
+
+
+b=1
+sumj=0
+while b!=99:
+    sumj=sumj+b
+    b+=2
+print(sumj)   #sumj=2401
+
+
+c=1
+sumxh=0
+for i in range(1,100):
+    sumxh=sumxh+i
+print(sumxh)
