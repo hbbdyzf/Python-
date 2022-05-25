@@ -1,0 +1,17 @@
+f=open('E:\python\scores.txt')
+lines=f.readlines()
+f.close()
+#print(lines)
+results=[]
+for line in lines:
+    data=line.split()
+    #print(line)
+    sum=0
+    for score in data[1:]:
+        sum+=int(score)
+        result='%s\t:%d\n'%(data[0],sum)
+results.append(result)
+output=open('E:\python\data1.txt','w')
+output.writelines(results)
+output.close()
+print(output)
