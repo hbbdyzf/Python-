@@ -1,0 +1,6 @@
+f=open('E:\python\data.txt')
+f1=open('E:\python\储存.txt','w')
+data=f.read()
+f1.write(data)
+f.close()
+f1.close()
