@@ -1,0 +1,11 @@
+# -*- coding: gbk -*-
+import urllib.request
+import json
+from city import city
+from urllib.request import urlopen
+cityname=input('你想查询哪个城市的天气？\n')
+citycode=city.get(cityname)
+if citycode:
+    url=('http://www.weather.com.cn/data/cityinfo/%s.html' % citycode)
+    content = urlopen(url).read()
+    print(content)
