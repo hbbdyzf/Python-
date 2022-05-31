@@ -1,0 +1,26 @@
+def getfactors(n):
+        list1=[]
+        num=n//1
+        if num>1:
+            while num<=n:
+                if n%num==0:
+                    print(num)
+                    list1.append([num])
+                    num = num - 1
+                    if num>0:
+                        pass
+                    else:
+                        break
+                else:
+                    num=num-1
+                    if num>0:
+                        pass
+                    else:
+                        break
+        return(list1)
+        f=open('ys.txt','w')
+        for i in liat1:
+            f.write(str(i)+'\n')
+            f.close()
+ys=getfactors(66)
+           
