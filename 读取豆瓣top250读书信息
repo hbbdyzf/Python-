@@ -1,0 +1,68 @@
+import requests
+import xlwt
+# import json  #JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式，易于人阅读和编写
+from bs4 import BeautifulSoup
+## 请求豆瓣网站，获取网页源码
+def request_douban(url):
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"}
+        response = requests.get(url, headers=headers)
+        print(response.status_code)
+        # 判断网页的返回码是不是200
+        if response.status_code == 200:
+            return response.text
+    except requests.RequestException:
+        return None
+# 如果不使用re.S参数，则只在每一行内进行匹配，如果一行没有，就换下一行重新开始。
+# 而使用re.S参数以后，正则表达式会将这个字符串作为一个整体，在整体中进行匹配
+book = xlwt.Workbook(encoding="utf-8", style_compression=0)
+# 先定义一个Excel表格，写好名称，图片等信息
+sheet = book.add_sheet("豆瓣图书Top250", cell_overwrite_ok=True)
+sheet.write(0, 0, "图片")
+sheet.write(0, 1, "评分")
+sheet.write(0, 2, "简介")
+sheet.write(0, 3, "作者")
+sheet.write(0, 4, "书名")
+n = 1
+# 将爬取下来的电影信息写入Excel表格中
+def save_to_excel(soup):
+    # 将存放电影信息的li标签写入列表中
+    book250_lists = soup.find(class_="indent").find_all("table")
+    # 从列表中的源网页解析出电影的名称，作者等信息
+    for book250 in book250_lists:
+        book250_img = book250.find('a').find('img').get("src")
+        book250_score = book250.find(class_="rating_nums").string
+        book250_author = book250.find('p').get_text()
+        book250_name = book250.find('div',attrs={'class':'pl2'}).find('a').get('title')
+        if book250.find(class_="inq") is not None:
+            book250_intr = book250.find(class_="inq").string
+        else:
+            book250_intr = 'NOT AVAILABLE'
+        print('爬取图书： ' + book250_img + ' | ' + book250_score + ' | ' + book250_intr)
+        # 将解析出的电影信息写入到Excel表格中
+        global n
+        sheet.write(n, 0, book250_img)
+        sheet.write(n, 1, book250_score)
+        sheet.write(n, 2, book250_intr)
+        sheet.write(n, 3, book250_author)
+        sheet.write(n, 4, book250_name)
+        n = n + 1
+# 定义主函数
+def main(page):
+    # 定义请求网页的url链接
+    url = 'https://book.douban.com/top250?start=' + str(page * 25) + '&filter='
+    # 请求网页
+    html = request_douban(url)
+    #print(html)
+    if html != None:
+        # 将收到的网页做一锅汤
+        soup = BeautifulSoup(html, "lxml")
+        save_to_excel(soup)
+    else:
+        print("请求网页失败")
+if __name__ == "__main__":
+    for i in range(0, 10):
+        main(i)
+    # 保存Excel表格
+    book.save(r'E:\python\豆瓣最受欢迎的250部书.xls')
